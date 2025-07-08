@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\PropertyController as AdminPropertyController;
 use App\Http\Controllers\Agent\PropertyController as AgentPropertyController;
+use App\Http\Controllers\Buyer\PropertyController as BuyerPropertyController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -26,5 +27,12 @@ Route::middleware(['auth:sanctum','role:agent'])->controller(AgentPropertyContro
 // Admin Routes
 Route::middleware(['auth:sanctum','role:admin'])->controller(AdminPropertyController::class)->group(function () {
     Route::get('/admin-all-properties', 'adminAllProperties');
+    Route::patch('/property/{id}', 'updateProperty');
+});
+
+
+//buyer Routes
+Route::middleware(['auth:sanctum','role:buyer'])->controller(BuyerPropertyController::class)->group(function () {
+    Route::get('/buyer-all-properties', 'buyerAllProperties');
     Route::patch('/property/{id}', 'updateProperty');
 });
