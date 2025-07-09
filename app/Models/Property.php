@@ -35,4 +35,14 @@ class Property extends Model
     public function getThumbnailUrlAttribute () {
         return asset('storage/' . $this->thumbnail_image);
     }
+
+    //using belongs to many for pivoted table, favorite table is a pivoted table, i.e property is related to user table
+    //through the favorite table, user id and property id in the favorite table
+    public function favoritedBy () {
+        return $this->belongsToMany(User::class, 'favorite', 'property_id', 'user_id');
+    }
+
+    public function favorites () {
+        return $this->hasMany(Favorite::class);
+    }
 }

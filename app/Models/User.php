@@ -56,4 +56,14 @@ class User extends Authenticatable
     public function properties () {
         return $this->hasMany(Property::class);
     }
+
+    public function favorites () {
+        return $this->hasMany(Favorite::class);
+    }
+
+    //using belongs to many for pivoted table, favorite table is a pivoted table, i.e user is related to property table
+    //through the favorite table, user id and property id in the favorite table
+    public function favoriteProperties () {
+        return $this->belongsToMany(Property::class, 'favorites', 'user_id', 'property_id')->withTimestamps();
+    }
 }
