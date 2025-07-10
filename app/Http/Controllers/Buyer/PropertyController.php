@@ -37,5 +37,13 @@ class PropertyController extends Controller
         }
     }
 
-    // public function getFavoritedProperties () {}
+    public function getFavoritedProperties (Request $request) {
+        $user = $request->user();
+
+        $properties = $user->favoriteProperties()->paginate();
+
+        return response()->json([
+            'properties' => $properties
+        ]);
+    }
 }
