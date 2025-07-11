@@ -40,7 +40,7 @@ class PropertyController extends Controller
     public function getFavoritedProperties (Request $request) {
         $user = $request->user();
 
-        $properties = $user->favoriteProperties()->paginate();
+        $properties = $user->favoriteProperties()->with(['user:id,firstname,lastname,phone_number,email'])->orderBy('updated_at', 'desc')->paginate(15);
 
         return response()->json([
             'properties' => $properties
