@@ -10,7 +10,7 @@ class Favorite extends Model
     /** @use HasFactory<\Database\Factories\FavoriteFactory> */
     use HasFactory;
 
-    public function user () {
+    public function users () {
         return $this->belongsTo(User::class);
     }
 
