@@ -9,7 +9,25 @@ use Illuminate\Http\Request;
 
 class PropertyController extends Controller
 {
-    public function buyerAllProperties () {}
+    public function buyerAllProperties (Request $request) {
+        $user = $request->user();
+
+        //returns a collection of favorited property id's
+        $favoritedIds = $user->favoriteProperties()->pluck('properties.id');
+
+        //returns collection of all properties with user that posted it and property images
+        $properties = Property::with('user', 'property_images')->where('status', 'approved')->orderBy('updated_at', 'desc')->paginate('15');
+
+        //compare property id if the favorited id match it or not
+        foreach ($properties as $property) {
+
+            // if it matches it, it would create a key called favorited and return value true
+            // if it does not matches it, it would create a key called favorited and return value false
+            $property->favorited = $favoritedIds->contains($property->id);
+        }
+
+        return response()->json($properties);
+    }
 
     public function favorite (Request $request, $id) {
         $user = $request->user();
