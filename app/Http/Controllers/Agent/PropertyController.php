@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Agent;
 
 use App\Http\Controllers\Controller;
+use App\Mail\agentPostedMail;
 use App\Models\Property;
 use App\Models\PropertyImage;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\ValidationException;
 
 class PropertyController extends Controller
@@ -56,6 +59,15 @@ class PropertyController extends Controller
                 }
     
                 $prop = $property->with('property_images')->first();
+
+                //stores the property,user that posted it, and proprty images to a variable for mailing
+                $mailProperty = $property->load(['user', 'property_images']);
+
+                $admins = User::where('role', 'admin')->get();
+
+                foreach($admins as $admin) {
+                    Mail::to($admin->email)->send(new AgentPostedMail($mailProperty));
+                }
         
                 return response()->json([
                     'message' => 'uploaded successfully',
