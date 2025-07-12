@@ -34,7 +34,7 @@ Route::middleware(['auth:sanctum','role:admin'])->controller(AdminPropertyContro
 //buyer Routes
 Route::middleware(['auth:sanctum', 'role:buyer'])->controller(BuyerPropertyController::class)->group(function () {
     Route::get('/buyer-all-properties', 'buyerAllProperties');
-    Route::get('/favorite', 'getFavoritedProperties');
+    // Route::get('/favorite', 'getFavoritedProperties');
     Route::post('/favorite/{id}', 'favorite');
 });
 
