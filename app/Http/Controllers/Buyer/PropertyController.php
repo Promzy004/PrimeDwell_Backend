@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Buyer;
 
 use App\Http\Controllers\Controller;
+use App\Mail\BuyerPropertyEnquiryMail;
 use App\Models\Property;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class PropertyController extends Controller
 {
@@ -53,6 +55,23 @@ class PropertyController extends Controller
                 'message' => 'property does not exist'
             ]);
         }
+    }
+
+    public function messageAgent (Request $request, $id) {
+        $buyer_datas = $request->validate([
+            'buyer_email' => 'required|email',
+            'buyer_name' => 'required',
+            'buyer_message' => 'required|string|min:10'
+        ]);
+
+        $property = Property::with('user:id,firstname,lastname,email', 'property_images')->where('id', $id)->first();
+
+        Mail::to($property->user->email)->send(new BuyerPropertyEnquiryMail($buyer_datas, $property));
+        
+
+        return response()->json([
+            'message' => 'Email succefully sent'
+        ]);
     }
 
     // public function getFavoritedProperties (Request $request) {
